@@ -2,10 +2,10 @@ import os
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
+from dotenv import load_dotenv
 
 endpoint = "https://models.github.ai/inference"
 model = "gpt-4o-mini"
-from dotenv import load_dotenv
 load_dotenv()
 token = os.environ["GITHUB_TOKEN"]
 
