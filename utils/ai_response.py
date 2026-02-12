@@ -14,24 +14,34 @@ client = ChatCompletionsClient(
     credential=AzureKeyCredential(token),
 )
 
-def get_completion(user_message, system_message="You are a helpful assistant."):
+def get_completion(user_message, system_message="You are a helpful assistant.", history=None):
     """
-    Get a completion from the AI model.
-    
-    Args:
-        user_message: The user's message/question
-        system_message: The system prompt (default: "You are a helpful assistant.")
-    
-    Returns:
-        The model's response
+    Get a completion from the AI model with optional conversation history.
     """
+
+    if history is None:
+        history = []
+
+    messages = [
+        SystemMessage(system_message)
+    ]
+
+    # Add previous conversation
+    for msg in history:
+        if msg["role"] == "user":
+            messages.append(UserMessage(msg["content"]))
+        elif msg["role"] == "assistant":
+            messages.append(SystemMessage(msg["content"]))
+
+    # Add current user message
+    messages.append(UserMessage(user_message))
+
     response = client.complete(
-        messages=[
-            SystemMessage(system_message),
-            UserMessage(user_message),
-        ],
+        messages=messages,
         model=model
     )
+
     return response.choices[0].message.content
+
 
 
