@@ -1,10 +1,12 @@
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 class AIRequest(BaseModel):
+    user_id: int  # Required to associate chat with a user
+    chat_id: Optional[int] = None # Optional, if None -> New Chat
     message: str
-    system_prompt: str
-    history: List[Dict] = []   # 👈 ADD THIS
 
 class AIResponse(BaseModel):
     response: str
+    chat_id: int
+
